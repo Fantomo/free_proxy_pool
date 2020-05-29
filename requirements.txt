@@ -1,0 +1,7 @@
+requests
+lxml
+flask
+flask-sqlalchemy
+pymysql
+PyYAML
+redis
