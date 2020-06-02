@@ -7,6 +7,7 @@ import yaml
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONFIG_FILE = os.path.join(BASE_PATH, 'config', 'config.yml')
 TOOLS_PATH = os.path.join(BASE_PATH, 'tools')
+LOGPATH = os.path.join(BASE_PATH, 'log/')
 
 
 class YamlReader:

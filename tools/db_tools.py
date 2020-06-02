@@ -32,6 +32,17 @@ app.config.from_object(DBConfig)
 db = SQLAlchemy(app)
 
 
+
+from tools.init_table import IPPool
+
+# 数据入库
+def addIp(proto, ip, port):
+	ip = IPPool(proto=proto, ip=ip, port=port)
+	db.session.add(ip)
+	db.session.commit()
+
+
+
 # redis
 class RedisConfig:
 
