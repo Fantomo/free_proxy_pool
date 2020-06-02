@@ -8,13 +8,15 @@ from flask_sqlalchemy import SQLAlchemy
 
 from tools.config import Config
 
+db_config = Config().get('db')
+TABLE_NAME = db_config['tablename']
 
 app = Flask(__name__)
+
 
 # mysql
 class DBConfig:
 
-	db_config = Config().get('db')
 	db_host = db_config['host']
 	db_port = db_config['port']
 	db_user = db_config['user']
@@ -24,16 +26,30 @@ class DBConfig:
 	SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://%s:%s@%s:%s/%s' % (db_user, db_passwd, db_host, db_port, database)
 	# SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}:{}/{}'.format(db_user, db_passwd, db_host, db_port, database)
 
+	# 暂时解决 sqlalchemy 连接数超过20个时报错问题 
+	SQLALCHEMY_POOL_SIZE = 1024
+
 	# 自动提交
-	SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-	SQLALCHEMY_TRACK_MODIFICATIONS = True
+	SQLALCHEMY_COMMIT_ON_TEARDOWN = False
+	SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 app.config.from_object(DBConfig)
 db = SQLAlchemy(app)
 
 
+# ip数据表
+class IPPool(db.Model):
+	__tablename__ = TABLE_NAME
 
-from tools.init_table import IPPool
+	id = db.Column(db.Integer, primary_key=True)
+	proto = db.Column(db.String(8), comment="协议")
+	ip = db.Column(db.String(64), comment="ip地址")
+	port = db.Column(db.String(8), comment="端口")
+	proofTime = db.Column(db.DateTime, default=datetime.datetime.now, nullable=False, comment="验证时间")
+
+	def __repr__(self):
+		return "ip:%s://%s:%s" % (self.proto, self.ip, self.port)
+
 
 # 数据入库
 def addIp(proto, ip, port):
@@ -41,6 +57,15 @@ def addIp(proto, ip, port):
 	db.session.add(ip)
 	db.session.commit()
 
+
+# 获取ip
+def query_ip(start, count, init_count):
+	ip_list = IPPool.query.limit(count).offset(start).all()
+
+	if len(ip_list) == 0:
+		ip_list = IPPool.query.limit(init_count).offset(0).all()
+
+	return ip_list
 
 
 # redis
