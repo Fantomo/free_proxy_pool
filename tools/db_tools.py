@@ -59,13 +59,15 @@ def addIp(proto, ip, port):
 
 
 # 获取ip
-def query_ip(start, count, init_count):
+def query_ip(start, count):
+	flag = False
 	ip_list = IPPool.query.limit(count).offset(start).all()
 
+	# 数据库查到最后一组时重头开始查
 	if len(ip_list) == 0:
-		ip_list = IPPool.query.limit(init_count).offset(0).all()
-
-	return ip_list
+		ip_list = IPPool.query.limit(count).offset(0).all()
+		flag = True
+	return ip_list, flag
 
 
 # redis
