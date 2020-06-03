@@ -15,7 +15,7 @@ log = logger.get_logger(__file__)
 
 
 
-def get_ip():
+def get_redis_data():
 	count = redis_cli.count_data(REDIS_KEY)
 	if count:
 		tmp_ip = json.loads(redis_cli.get_data(REDIS_KEY))
@@ -35,7 +35,7 @@ def verify_available_proxy():
 
 	flag = True
 	while flag:
-		proto, ip, port, count = get_ip()
+		proto, ip, port, count = get_redis_data()
 		if count == 1:
 			flag = False
 		try:
@@ -47,7 +47,3 @@ def verify_available_proxy():
 
 		except:
 			log.info("%s :Agent is not available" % ip)
-
-
-if __name__ == '__main__':
-	verify_available_proxy()

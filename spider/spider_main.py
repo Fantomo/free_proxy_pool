@@ -63,7 +63,7 @@ def kdl_ip_spider():
 		url = "http://www.kuaidaili.com/free/inha/{}".format(page)
 		start_spider_page(req_url=url, xpath_dict=xpath_dict)
 
-if __name__ == '__main__':
-	# xc_ip_spider()
-	# seo_ip_spider()
+def start_spider():
+	xc_ip_spider()
+	seo_ip_spider()
 	kdl_ip_spider()

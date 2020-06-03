@@ -50,21 +50,21 @@ def get_ip_api():
 		try:
 			action = get_data.get('action')
 			count = int(get_data.get('count'))
-			if action == 'get_ip' and count <= 5:
+			if action == 'get_ip' and count <= 5 and count > 0:
 				result['ip_list'] = get_ip(count)
 				return json.dumps(result, ensure_ascii=False)
 			else:
-				result['result_code'] = '204'
+				result['result_code'] = '400'
 				result['result_msg'] = '请求参数错误'
 				result['result'] = False
 				return json.dumps(result, ensure_ascii=False)
 		except:
-			result['result_code'] = '206'
+			result['result_code'] = '400'
 			result['result_msg'] = '请求参数错误'
 			result['result'] = False
 			return json.dumps(result, ensure_ascii=False)
 	else:
-		result['result_code'] = '205'
+		result['result_code'] = '204'
 		result['result_msg'] = '未查询到数据'
 		result['result'] = False
 		return json.dumps(result, ensure_ascii=False)
@@ -89,7 +89,3 @@ def get_ip(count):
 		start += count
 
 	return ip_group
-
-
-if __name__ == '__main__':
-	app.run(debug=True)

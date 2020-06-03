@@ -1,3 +1,4 @@
+# mysql
 db:
   host: 127.0.0.1
   port: 3306
@@ -6,10 +7,14 @@ db:
   database: ip_pool
   tablename: ip_tables
 
+# redis
 redis:
   host: 127.0.0.1
   port: 6379
   key: ip
+
+# 是否初始化数据库
+IS_INIT_DATABASE: False
 
 # 是否开启ip验证
 is_verify: True
@@ -28,6 +33,7 @@ user-angers:
   - {"User-Agent":"com.ss.android.ugc.aweme/600 (Linux; U; Android 7.1.1; zh_CN; NX589J; Build/NMF26F; Cronet/58.0.2991.0)"}
 
 
+# 日志文件配置
 log_config:
   file: crawl_ip.log
   level: INFO
